@@ -307,7 +307,7 @@ plt.show()
 print(f'グラフが保存されました: {output_path}')
 
 
-############################################################################################################################################
+################################################################################################################################################################################
 
 
 
@@ -343,30 +343,6 @@ print(f'グラフが保存されました: {output_path}')
 
 
 
-file_path = './chiba/black.csv'  # 実際のファイルパスに置き換えてください
 
-# CSVファイルの読み込み
-df_spectrum = pd.read_csv(file_path, header=None, names=['wavelength', 'intensity'])
-
-# データの表示
-
-output_folder = 'bunko_graph'
-os.makedirs(output_folder, exist_ok=True)
-
-# スペクトルのプロット
-plt.figure(figsize=(10, 6))
-plt.plot(df_spectrum['wavelength'], df_spectrum['intensity'], label='スペクトル')
-plt.xlabel('波長(nm)')
-plt.ylabel('強度')
-plt.title('スペクトルプロット')
-plt.legend()
-plt.grid(True)
-
-# プロットをファイルに保存
-output_path = os.path.join(output_folder, 'black_plot.png')
-plt.savefig(output_path)
-plt.show()
-
-print(f'グラフが保存されました: {output_path}')
 
 
