@@ -78,20 +78,9 @@ for name, group in grouped:
 # 結果をデータフレームに変換
 df_results = pd.DataFrame(results)
 
-# # Kが10より大きい場合のdistance * pとVをプロット
-# df_K_greater_10 = df_results[df_results['K'] > 10]
-# df_K_greater_10['Distance_p'] = df_K_greater_10['Total Distance'] * df_K_greater_10['p']
-# df_K_greater_10['V'] = df_K_greater_10['E_multiplier']
-
-# # プロット
-# plt.figure(figsize=(10, 6))
-# plt.scatter(df_K_greater_10['Distance_p'], df_K_greater_10['V'], c=df_K_greater_10['K'], cmap='viridis')
-# plt.colorbar(label='K value')
-# plt.xlabel('Distance * p')
-# plt.ylabel('V (E multiplier)')
-# plt.title('Distance * p vs V for K > 10')
-# plt.show()
 
 # 最も大きいKの値の経路の詳細
 max_K_per_p_and_E = df_results.loc[df_results.groupby(['p', 'E_multiplier'])['K'].idxmax()]
 print(max_K_per_p_and_E)
+# 結果をCSVファイルに保存
+max_K_per_p_and_E.to_csv('calculation_results.csv', index=False)
