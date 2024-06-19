@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.optimize import fsolve
-import matplotlib.pyplot as plt
-import japanize_matplotlib
-import os
+
 
 
 # Excelファイルの読み込み

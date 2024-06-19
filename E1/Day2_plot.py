@@ -6,15 +6,25 @@ import japanize_matplotlib
 file_path = 'calculation_results.csv'
 df_results = pd.read_csv(file_path)
 
-# 初めの5点を抽出
-df_results = df_results.head(5)
-
 # p * Total Distanceを計算して新しい列に追加
 df_results['p_distance'] = df_results['p'] * df_results['Total Distance']
 
-# 横軸をp * Total Distance、縦軸をE_multiplierとしてプロット
+# Kが10より大きい値をフィルタリング
+filtered_df = df_results[df_results['K'] > 10]
+
+# 各pの値ごとにフィルタリングして、p_distanceごとにE_multiplierが最も小さいものを抽出
+results = []
+for p_value in filtered_df['p'].unique():
+    df_p = filtered_df[filtered_df['p'] == p_value]
+    min_E_per_p_distance = df_p.loc[df_p.groupby('p_distance')['E_multiplier'].idxmin()]
+    results.append(min_E_per_p_distance)
+
+# 結果を結合
+final_results = pd.concat(results)
+
+# プロット
 plt.figure(figsize=(10, 6))
-plt.scatter(df_results['p_distance'], df_results['E_multiplier'], color='blue', label='Data Points')
+plt.scatter(final_results['p_distance'], final_results['E_multiplier'], color='blue', label='Data Points')
 plt.xlabel('p * Total Distance')
 plt.ylabel('V = E_multiplier')
 plt.title('Scatter Plot of V = E_multiplier against p * Total Distance')
