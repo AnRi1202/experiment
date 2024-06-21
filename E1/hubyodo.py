@@ -5,6 +5,7 @@ import os
 
 output_folder = 'graph'
 os.makedirs(output_folder, exist_ok=True)
+
 # 正の直流のデータ
 data_dc_positive = {
     'd': [40.0, 20.0, 8.0, 6.0, 10.0, 4.0],
@@ -35,16 +36,16 @@ df_ac = pd.DataFrame(data_ac)
 plt.figure(figsize=(10, 6))
 
 # 正の直流のプロット
-plt.scatter(df_dc_positive['d'], df_dc_positive['v1'], marker='o', label='v1 (正 - コロナ)')
-plt.scatter(df_dc_positive['d'], df_dc_positive['v2'], marker='x', label='v2 (正 - 火花)')
+plt.scatter(df_dc_positive['d'], df_dc_positive['v1'], marker='o', s=100, edgecolors='black', label='v1 (正 - コロナ)')
+plt.scatter(df_dc_positive['d'], df_dc_positive['v2'], marker='x', s=100, edgecolors='black', label='v2 (正 - 火花)')
 
 # 負の直流のプロット
-plt.scatter(df_dc_negative['d'], df_dc_negative['v1'], marker='o', linestyle='--', label='v1 (負 - コロナ)')
-plt.scatter(df_dc_negative['d'], df_dc_negative['v2'], marker='x', linestyle='--', label='v2 (負 - 火花)')
+plt.scatter(df_dc_negative['d'], df_dc_negative['v1'], marker='o', s=100, edgecolors='black', facecolors='none', label='v1 (負 - コロナ)')
+plt.scatter(df_dc_negative['d'], df_dc_negative['v2'], marker='x', s=100, edgecolors='black', label='v2 (負 - 火花)')
 
 # 交流のプロット
-plt.scatter(df_ac['d'], df_ac['v1'], marker='o', linestyle=':', label='v1 (交流 - コロナ)')
-plt.scatter(df_ac['d'], df_ac['v2'], marker='x', linestyle=':', label='v2 (交流 - 火花)')
+plt.scatter(df_ac['d'], df_ac['v1'], marker='o', s=100, edgecolors='black', facecolors='gray', label='v1 (交流 - コロナ)')
+plt.scatter(df_ac['d'], df_ac['v2'], marker='x', s=100, edgecolors='black', label='v2 (交流 - 火花)')
 
 plt.xlabel('d')
 plt.ylabel('Values')
@@ -56,3 +57,5 @@ plt.grid(True)
 output_path = os.path.join(output_folder, 'd_v1_v2_plot.png')
 plt.savefig(output_path)
 plt.show()
+
+print(f'プロットが保存されました: {output_path}')

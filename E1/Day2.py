@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
-from scipy.optimize import fsolve
-
-
+import os
+import matplotlib.pyplot as plt
+import japanize_matplotlib
 
 # Excelファイルの読み込み
 file_path = './電界分布計算結果_202106修正 のコピー.xlsx'
@@ -63,22 +63,47 @@ p_values = np.linspace(0.01, 5, 10)      # 100 -> 20
 # 結果を保存するリスト
 results = []
 
-# # 各No.ごとにEとpの範囲でKを計算
-# 各No.ごとにEとpの範囲でKを計算
+# 各No.ごとにEとpの範囲でKを計算し、最初にKが10を超える点を収集
 for name, group in grouped:
     group = group.reset_index()
     total_distance = df_distances_sum.loc[df_distances_sum['No.'] == name, 'Total Distance'].values[0]
-    for E_multiplier in E_multipliers:
-        for p in p_values:
+    for p in p_values:
+        for E_multiplier in E_multipliers:
             K = calculate_K(E_multiplier, p, group)
-            results.append({'No.': name, 'E_multiplier': E_multiplier, 'p': p, 'K': K, 'Total Distance': total_distance})
+            if K > 10:
+                results.append({'No.': name, 'E_multiplier': E_multiplier, 'p': p * 133.322, 'K': K, 'Total Distance': total_distance})
+                break  # 最初の点を見つけたら次のpへ
+        else:
+            continue
+        break
 
 # 結果をデータフレームに変換
 df_results = pd.DataFrame(results)
 
-
-# 最も大きいKの値の経路の詳細
-max_K_per_p_and_E = df_results.loc[df_results.groupby(['p', 'E_multiplier'])['K'].idxmax()]
-print(max_K_per_p_and_E)
 # 結果をCSVファイルに保存
-max_K_per_p_and_E.to_csv('calculation_results.csv', index=False)
+df_results.to_csv('calculation_results.csv', index=False)
+
+# p * Total Distanceを計算して新しい列に追加
+df_results['p_distance'] = df_results['p'] * df_results['Total Distance']
+
+# フォルダを作成（存在しない場合）
+output_folder = 'graph'
+os.makedirs(output_folder, exist_ok=True)
+
+# プロット
+plt.figure(figsize=(10, 6))
+plt.scatter(df_results['p_distance'], df_results['E_multiplier'], color='blue')
+plt.xlabel('pd[Pa*mm]')
+plt.ylabel('V(kV)')
+# plt.title('Scatter Plot of V against pd[Pa*mm]')
+plt.legend()
+plt.grid(True)
+
+# 画像を保存
+output_file_path = os.path.join(output_folder, 'scatter_plot.png')
+plt.savefig(output_file_path)
+
+# プロットを表示
+plt.show()
+
+print(f'プロットが保存されました: {output_file_path}')
